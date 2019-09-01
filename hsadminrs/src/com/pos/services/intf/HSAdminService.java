@@ -30,4 +30,9 @@ public interface HSAdminService {
 	@Path("/logout")
 	@Produces("application/json")
 	public Response logoutUser(@QueryParam("userId")String userId) throws Exception;
+	
+	@GET
+	@Path("/checkUser")
+	@Produces("application/json")
+	public Response checkUser(@QueryParam("userId")String userId) throws Exception;
 }

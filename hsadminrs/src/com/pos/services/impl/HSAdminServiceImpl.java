@@ -201,4 +201,10 @@ public class HSAdminServiceImpl implements HSAdminService {
 				.header("Access-Control-Max-Age", "1209600").type(MediaType.APPLICATION_JSON).build();
 
 	}
+
+	@Override
+	public Response checkUser(String userId) throws Exception {
+		System.out.println(" new user created--->");
+		return null;
+	}
 }
