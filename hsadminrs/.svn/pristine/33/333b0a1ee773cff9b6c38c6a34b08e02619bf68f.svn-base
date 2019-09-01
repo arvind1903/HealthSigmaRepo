@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.5 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.5 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<!-- START SNIPPET: beans -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+
+http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+
+http://cxf.apache.org/configuration/security 
+
+http://cxf.apache.org/schemas/configuration/security.xsd 
+
+http://cxf.apache.org/transports/http/configuration 
+
+http://cxf.apache.org/schemas/configuration/http-conf.xsd
+http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+
+
+">
+
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<cxf:bus>
+		<cxf:features>
+			<cxf:logging />
+		</cxf:features>
+	</cxf:bus>
+	
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+	
+	<bean id="jaxbXmlProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider" />
+	
+	<bean id="wadlProvider" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">
+		<property name="applicationTitle" value="Rest Service for multiple endpoints" />
+	</bean>
+
+	<bean id="hsadminService" class="com.pos.services.impl.HSAdminServiceImpl" />
+	
+		
+	
+	<!-- note bean and server id are different -->
+	
+	<jaxrs:server id="hsadminServices" address="/hsadmin">
+		<jaxrs:serviceBeans>
+			<ref bean="hsadminService" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+		  <ref bean="jsonProvider" />
+		  <ref bean="jaxbXmlProvider" />
+		  <ref bean="wadlProvider" />
+		</jaxrs:providers>
+		<jaxrs:extensionMappings>
+		    <entry key="xml" value="application/xml" />
+		    <entry key="json" value="application/json" />
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+	
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.map.SerializationConfig$Feature.WRAP_ROOT_VALUE"/>
+                <value type="boolean">false</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.map.DeserializationConfig$Feature.UNWRAP_ROOT_VALUE"/>
+                <value type="boolean">false</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.JsonParser$Feature.ALLOW_UNQUOTED_FIELD_NAMES"/>
+                <value type="boolean">true</value>
+            </list>
+        </property>
+    </bean>
+       <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.map.DeserializationConfig$Feature.FAIL_ON_UNKNOWN_PROPERTIES"/>
+                <value type="boolean">false</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.map.DeserializationConfig$Feature.READ_ENUMS_USING_TO_STRING"/>
+                <value type="boolean">true</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jsonProvider" />
+        <property name="targetMethod">
+            <value>configure</value>
+        </property>
+        <property name="arguments">
+            <list>
+                <util:constant static-field="org.codehaus.jackson.map.SerializationConfig$Feature.WRITE_ENUMS_USING_TO_STRING"/>
+                <value type="boolean">true</value>
+            </list>
+        </property>
+    </bean>	
+	  
+
+</beans>

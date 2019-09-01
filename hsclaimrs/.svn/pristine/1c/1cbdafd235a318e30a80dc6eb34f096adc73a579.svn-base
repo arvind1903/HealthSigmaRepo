@@ -1,0 +1,25 @@
+package com.pos.a.model;
+
+public class ClaimBOResponse {
+private ClaimBO headerinfo;
+private String info;
+public ClaimBO getHeaderinfo() {
+	return headerinfo;
+}
+public void setHeaderinfo(ClaimBO headerinfo) {
+	this.headerinfo = headerinfo;
+}
+public String getInfo() {
+	return info;
+}
+public void setInfo(String info) {
+	this.info = info;
+}
+public String getError() {
+	return error;
+}
+public void setError(String error) {
+	this.error = error;
+}
+private String error;
+}
