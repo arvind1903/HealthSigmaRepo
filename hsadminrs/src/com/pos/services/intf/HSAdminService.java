@@ -36,4 +36,7 @@ public interface HSAdminService {
 	@Produces("application/json")
 	public Response getUserMenuPages(@QueryParam("userId")String userId) throws Exception;
 	
+	@Path("/checkUser")
+	@Produces("application/json")
+	public Response checkUser(@QueryParam("userId")String userId) throws Exception;
 }

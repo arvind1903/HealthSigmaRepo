@@ -207,4 +207,10 @@ public class HSAdminServiceImpl implements HSAdminService {
 		System.out.println(" get User menu pages");
 		return null;
 	}
+
+	@Override
+	public Response checkUser(String userId) throws Exception {
+		System.out.println(" new user created--->");
+		return null;
+	}
 }
